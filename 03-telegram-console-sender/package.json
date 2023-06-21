@@ -1,0 +1,17 @@
+{
+  "name": "03-telegram-console-sender",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "main.js",
+  "scripts": {
+    "start": "env $(cat .env | xargs) node main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "gogaeva",
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^10.0.1",
+    "node-telegram-bot-api": "^0.61.0"
+  }
+}
