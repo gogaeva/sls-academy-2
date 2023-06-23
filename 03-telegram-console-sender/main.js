@@ -8,8 +8,6 @@ process.env["NTBA_FIX_350"] = 1
 const TOKEN = process.env.TOKEN
 const BOT = new TelegramBot(TOKEN)
 
-const CHAT_ID_PATH = './.chatID'
-// let CHAT_ID
 let CHAT_ID = process.env.CHAT_ID
 
 const program = new Command()
@@ -21,8 +19,7 @@ program
     .hook('preAction', async () => {
         if (!CHAT_ID)
             try {
-                // CHAT_ID = await loadChatId()
-                CHAT_ID = await getChatIdByUsername(BOT)
+                CHAT_ID = await loadChatId(BOT)
             } catch (err) {
                 console.log(err.message)
                 process.exit()
@@ -42,26 +39,8 @@ program.command('photo')
     .alias('p')
     .action((path) => sendPhoto(BOT, CHAT_ID, path))
 
-    
-// async function checkForChatId() {
-//     try {
-//         await fs.access(CHAT_ID_PATH, fs.constants.R_OK)
-//         return true
-//     } catch {
-//         return false
-//     }
-// }
 
-// async function loadChatId() {
-//     if (await checkForChatId()) {
-//         const id = await fs.readFile(CHAT_ID_PATH)   
-//         return parseInt(id)
-//     }
-    
-//     return await getChatIdByUsername(BOT)
-// }
-
-async function getChatIdByUsername(bot) {
+async function loadChatId(bot) {
     const rl = readline.createInterface({
         input: process.stdin,
         output: process.stdout,
@@ -74,7 +53,6 @@ async function getChatIdByUsername(bot) {
     if (fromCurrentUser)
         try {
             const chatId = fromCurrentUser.message.chat.id
-            // await fs.writeFile(CHAT_ID_PATH, chatId.toString())
             await fs.writeFile('./.env', `\nCHAT_ID=${chatId.toString()}`, {flag: 'a'})
             console.log('Chat id was successfully saved')
             return parseInt(chatId)
